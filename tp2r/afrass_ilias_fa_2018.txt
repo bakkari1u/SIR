@@ -1,0 +1,264 @@
+******************************************************************************************
+******* Ce fichier est à renomer "nom_prenom_fi_2016.txt" et à uploader sur le site ******
+******* https://www.iut-info.univ-lille1.fr/~lancieri/upload.html ************************
+******************************************************************************************
+
+Nom: AFRASS
+Prénom: ILIAS
+
+
+****************** mettre ci-dessous la matrice Mut-binaire *********
+1;1;0;0;0;
+0;0;0;1;0;
+1;1;0;0;1;
+0;0;1;1;1;
+0;0;1;1;0;
+1;1;0;0;0;
+0;0;0;1;0;
+0;1;1;0;0;
+0;0;1;0;1;
+
+****************** mettre ci-dessous la matrice Mtt ******************
+
+0.00	;	0.25	;	1.00	;	1.00	;	0.80	;
+0.00	;	0.00	;	0.86	;	1.00	;	0.83	;
+0.00	;	0.00	;	0.00	;	0.67	;	0.60	;
+0.00	;	0.00	;	0.00	;	0.00	;	0.83	;
+0.00	;	0.00	;	0.00	;	0.00	;	0.00	;
+
+
+****************** mettre ci-dessous la matrice Mtt-binaire **********
+1;1;0;0;0;
+0;1;0;0;0;
+0;0;1;0;0;
+0;0;0;1;0;
+0;0;0;0;1;
+
+****************** mettre ci-dessous la matrice MutR *****************
+0;0;0;0;0;
+0;0;0;0;0;
+0;0;0;0;0;
+0;0;0;0;0;
+0;0;0;0;0;
+0;0;0;0;0;
+0;0;0;0;0;
+1;0;0;0;0;
+0;0;0;0;0;
+
+****************** mettre ci-dessous la liste des recomendations *****
+
+Justine 6 -> bricolage
+
+****************** mettre ci-dessous votre compte rendu ****************
+
+Si le seuil est faible => diminution des recommandations.
+Dans le cas contraire, lorsque que le seuil est elevé => augumentation des recommandations.
+
+
+
+********* Mettre ci-dessous le code soure de votre programme avec commentaires *********
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.DecimalFormat;
+
+/**
+ *
+ */
+
+/**
+ * @author afrass
+ *
+ */
+public class TP2_SIR {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		String filePath = "/home/m2eserv/afrass/Desktop/tp2r/mut.txt";
+
+		int[][] mut;
+		mut = new int[9][5];
+
+		// lire le fichier Mut
+		try {
+			BufferedReader buff = new BufferedReader(new FileReader(filePath));
+
+
+			//extraire les lignes et les mettre dans une liste
+			String str;
+			int i=0;
+
+			try {
+				while ((str = buff.readLine()) != null) {
+
+					String[] str_tab = str.split(";");
+					for (int j = 0; j < str_tab.length; j++) {
+						mut[i][j] = Integer.parseInt(str_tab[j]);
+					}
+					i++;
+				}
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		//affichage de la matrice mut
+		System.out.println("################################### Matrice mut ####################################");
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 5; j++) {
+				System.out.print(mut[i][j]+";");
+			}
+			System.out.println("");
+
+		}
+
+		System.out.println("############################################################################################");
+		System.out.println("");
+		System.out.println("");
+
+		System.out.println("################################### Matrice mut_binaire ####################################");
+		int[][] mut_binaire;
+		mut_binaire = new int[9][5];
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 5; j++) {
+				if(mut[i][j] == 0)
+					mut_binaire[i][j] = 0;
+				else
+					mut_binaire[i][j] = 1;
+
+			}
+		}
+		//affichage de la matrice mut_Binaire
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 5; j++) {
+				System.out.print(mut_binaire[i][j]+";");
+			}
+			System.out.println("");
+
+		}
+
+		System.out.println("############################################################################################");
+		System.out.println("");
+		System.out.println("");
+
+		System.out.println("################################### Matrice Mtt ####################################");
+		double mtt[][];
+		mtt = new double[5][5];
+		double inter = 0;
+		double union = 0;
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = i ; j < 5; j++) {
+				if(i != j) {
+					for (int k = 0; k < 9; k++) {
+						if (mut_binaire[k][i] == mut_binaire[k][j] && mut_binaire[k][i]  == 1) {
+							inter++;
+						}
+						if (mut_binaire[k][i] == 1 || mut_binaire[k][j]  == 1) {
+							union++;
+						}
+					}
+
+					mtt [i][j] = 1 - (inter/union);
+					inter =0 ;
+					union =0 ;
+				}
+			}
+		}
+		DecimalFormat df = new DecimalFormat ( ) ;
+		df.setMaximumFractionDigits ( 2 ) ; //arrondi à 2 chiffres apres la virgules
+		df.setMinimumFractionDigits ( 2 ) ;
+		System.out.println("");
+
+		//affichage de la matrice mtt
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				System.out.print(df.format(mtt[i][j])+"\t;\t");
+			}
+			System.out.println("");
+
+		}
+		System.out.println("############################################################################################");
+		System.out.println("");
+		System.out.println("");
+
+		System.out.println("################################### Matrice Mtt_binaire ####################################");
+
+		int[][] mtt_binaire;
+		mtt_binaire = new int[5][5];
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = i; j < 5; j++) {
+				if(mtt[i][j] < 0.5)
+					mtt_binaire[i][j] = 1;
+				else
+					mtt_binaire[i][j] = 0;
+
+			}
+		}
+
+		//affichagede la matrice mtt_binaire
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				System.out.print(mtt_binaire[i][j]+";");
+			}
+			System.out.println("");
+		}
+		System.out.println("############################################################################################");
+		System.out.println("");
+		System.out.println("");
+
+		System.out.println("################################### Matrice MutR ###########################################");
+
+		int[][] mutR;
+		mutR = new int[9][5];
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = i; j < 5; j++) {
+				if(mtt_binaire[i][j] == 1 && i != j) {
+					for (int k = 0; k < 9; k++) {
+						if(mut_binaire[k][i] == 1 && mut_binaire[k][j] != 1) {
+							mutR[k][j]=1;
+						}
+						if(mut_binaire[k][i] != 1 && mut_binaire[k][j] == 1) {
+							mutR[k][i]=1;
+						}
+					}
+
+
+				}
+
+
+			}
+		}
+
+		//affichagede la matrice mutR
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 5; j++) {
+				System.out.print(mutR[i][j]+";");
+			}
+			System.out.println("");
+		}
+		System.out.println("############################################################################################");
+		System.out.println("");
+		System.out.println("");
+
+
+
+	}
+}
